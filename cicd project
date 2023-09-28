@@ -1,0 +1,141 @@
+CICD PROJECT
+CICD PROJECT IN (AWS) 
+⮚Create 3 instance at a time in ec2
+⮚Go to security settings—inbound rules—add rule
+▪All icmp-ipv4  ….. anywhere
+▪http ……. Anywhere
+▪custom …… 8080…….anywhere
+❖Then open the jenkins putty 
+❖# sudo su –
+❖# passwd    //generate root password//
+❖# vi /etc/ssh/sshd_config  /// password authentication change yes//
+❖# ssh-keygen
+
+❖Installation of Jenkins in Jenkins machine
+❖# yum update –y
+❖# wget –O /etc/yum.repos.d/Jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+❖# rmp –import  https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+❖yum upgrade
+❖amazon-linux-extras install java-openjdk11 -y
+❖yum install jenkins  -y
+❖systemctl enable jenkins
+❖systemctl start jenkins
+❖systemctl status Jenkins
+❖next  copy the Jenkins public ip and paste the httpd:// ********:8080
+❖its open one Jenkins page copy the text and past the putty
+⮚like  // cat /var/lib/Jenkins/secrets/initialadminpassword //
+⮚it will show the one of the password in putty copy and paste the webpage
+⮚GIT INSTALLATION IN JENKINS 
+⮚yum install git –y
+⮚yum update git –y
+⮚mkdir project
+⮚cd  project
+⮚(projrct) #  vi index.html
+⮚(projrct) #  git init
+⮚(projrct) #  git add .
+⮚(projrct) #  git commit –m “1st commit”
+⮚(projrct) #  git status
+⮚(projrct) #  git remote add origin https://github.com/charankumar125s/charan.git 
+⮚(projrct) #  git push –u origin master
+⮚User name : charankumar125s
+⮚Password:  git token
+⮚Successfully push the file in github check  it in github
+⮚(projrct) #  cd ..
+⮚(root) #  cd .ssh
+⮚(.ssh) #  ls –al
+⮚(.ssh) #  scp id_rsa.pub  ansible pub ip :/root/.ssh
+●Check the ansible ip ping or not
+●# ssh ansible ip   { without asking password is it right way}
+●Open the ansible putty hear
+
+■Open ansible putty machine
+■# sudo su –
+■# passwd    //generate root password//
+■# vi /etc/ssh/sshd_config  /// password authentication change yes//
+■# ssh-keygen
+■cd .ssh/
+■(.ssh) # cat id_rsa.pub >> authorized_keys
+■ll –al
+■installation of ansible
+■amazon-linux-extras install epel –y
+■yum install ansible –y
+■ansible –version
+■(root) #  cd .ssh
+■(.ssh) #  ls –al
+■(.ssh) #  scp id_rsa.pub  web pub ip :/root/.ssh
+●Check the ansible ip ping or not
+●# ssh web ip   { without asking password is it right way}
+1.Open the web putty here
+❖Open the web putty
+❖# sudo su –
+❖# passwd    //generate root password//
+❖# vi /etc/ssh/sshd_config  /// password authentication change yes//
+❖# ssh-keygen
+❖cd .ssh/
+❖(.ssh) # cat id_rsa.pub >> authorized_keys
+
+1)Copy the Jenkins ip address Open the Jenkins web page
+2)Manage Jenkins > configure system
+3)Scroll down to SSH servers  >  add > ssh server
+4)Name –jenkins
+5)Host name –jenkins public id
+6)User name :  root
+7)Advance  > select user password authentication >> 
+8)Enter the >> Jenkins root password
+9)Test configuration – test configuration should be success
+●Add ssh server for ansible
+2. Name –ansible
+3.Host name –ansibles public id
+4.User name :  root
+5.Advance  > select user password authentication >> 
+6.Enter the >> Jenkins root password
+7.Test configuration – test configuration should be success
+8.Apply & save 
+❖Go to the Jenkins >> select the down arrow, next to the logout option
+❖Configure >> add new token >> generate >> copy and save the token >> apply >> save
+❖Go to github >>
+❖ current project >> settings >> add webhook
+❖Past the jenkins url 
+❖Content type – json
+❖Secret code – Jenkins token copy hear
+❖Save it
+
+●Go to Jenkins >>
+● dashboard >> new items >>
+●Enter the name >> freestyle project >> ok
+●Under project name >> configure >> 
+●Git >> paste the git repository >> git >> github hook triggers
+●Bulid steps >> select  send files or execute command or ssh
+●Name = Jenkins
+●Exec command =  rsync –avh /var/lib/jenkins/workspace/project name/index.html ansible ip :/opt
+●Apply & save
+●Then build it
+
+⮚Go to ansible putty
+⮚Vi /etc/ansible/hosts
+●Scroll down >>
+●[web]
+●Web ip 
+●:wq
+⮚Vi web.yaml
+●Write the yaml code
+●
+●---
+●- hosts: web
+●  tasks:
+●  - copy:
+●     src:  /opt/index.html
+●     dest: /var/www/html
+⮚ansible-playbook web.yaml –C
+⮚Go to Jenkins webpage
+⮚Under project name >> configure >> 
+●Build steps >> select  send files or execute command or ssh
+●Name = ansible
+⮚Exec command = ansible-playbook web.yaml
+⮚Apply & save
+⮚Build it
+
+
+[copy the web instance public ip & paste the http:// public ip ]
+Out put:
+Display the output
